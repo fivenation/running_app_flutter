@@ -3,15 +3,22 @@ import 'dart:async';
 import 'package:location/location.dart';
 import 'package:yandex_mapkit/yandex_mapkit.dart';
 
-class LocationRepository {
+class LocationService {
   final Location location = Location();
   late StreamSubscription<LocationData> locationSubscription;
 
-  void fetchLocation(Function(LocationData locationData) fun) {
-    locationSubscription = location.onLocationChanged.listen((LocationData locationData) { fun(locationData); });
+  final _pointsController = StreamController<Point>();
+  Stream<Point> get points => _pointsController.stream;
+  
+  void fetchLocation() {
+    locationSubscription = location.onLocationChanged
+        .listen((LocationData locationData) {
+          _pointsController.sink.add(Point(longitude: locationData.longitude!, latitude: locationData.latitude!));
+        });
   }
 
   void close() async {
+    _pointsController.close();
     await locationSubscription.cancel();
     location.enableBackgroundMode(enable: false);
   }

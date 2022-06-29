@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "375947941287",
+    "firebase_url": "https://runningappflutter-default-rtdb.europe-west1.firebasedatabase.app",
+    "project_id": "runningappflutter",
+    "storage_bucket": "runningappflutter.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:375947941287:android:6688e4c55d13dea21a5282",
+        "android_client_info": {
+          "package_name": "com.fivenation.running_app_flutter"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "375947941287-kvcur7m6le7qise0nb1ak8bo08ljg1dt.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCUHlAEc6OMRbTfvSkPf6wfhfyaDokPVmQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "375947941287-kvcur7m6le7qise0nb1ak8bo08ljg1dt.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,7 +1,20 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:running_app_flutter/running/running_page.dart';
+import 'package:provider/provider.dart';
+import 'package:running_app_flutter/screens/auth_page.dart';
+import 'package:running_app_flutter/domain/services/auth_service.dart';
+import 'package:running_app_flutter/models/user_model.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+      options: const FirebaseOptions(
+        apiKey: 'AIzaSyCUHlAEc6OMRbTfvSkPf6wfhfyaDokPVmQ',
+        appId: '1:375947941287:android:6688e4c55d13dea21a5282',
+        projectId: 'runningappflutter',
+        messagingSenderId: '375947941287',
+      )
+  );
   runApp(const MyApp());
 }
 
@@ -10,38 +23,15 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: HomePage(),
-    );
-  }
-}
-
-class HomePage extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Run App Flutter'),),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              OutlineButton(onPressed: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => RunningPage())
-                );
-              },
-                child: const Text( 'Run Page'),
-              ),
-            ],
-          ),
-        ],
+    return StreamProvider<AuthUser?>.value(
+      value: AuthService().currentUser,
+      initialData: null,
+      child: MaterialApp(
+        title: 'Flutter Demo',
+        theme: ThemeData(
+          primarySwatch: Colors.blue,
+        ),
+        home: LangingPage(),
       ),
     );
   }

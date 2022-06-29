@@ -4,10 +4,11 @@ import 'dart:typed_data';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:running_app_flutter/running/location_repository.dart';
+import 'package:running_app_flutter/domain/services/location_service.dart';
 import 'package:yandex_mapkit/yandex_mapkit.dart';
 
-class MapController with ChangeNotifier {
+
+class RunController with ChangeNotifier {
   // CONSTANTS
   static const double _fixedZoom = 17.0;
   static const animation = MapAnimation(type: MapAnimationType.smooth, duration: 1.0);
@@ -16,7 +17,7 @@ class MapController with ChangeNotifier {
   static const MapObjectId _kmPosId = MapObjectId('kmPositionCollection');
 
   // CONTROLLERS AND REPOSITORIES
-  final LocationRepository _locationRepository = LocationRepository();
+  final LocationService _locationRepository = LocationService();
   late YandexMapController? _controller;
   final timerController = TimerController();
 
@@ -57,11 +58,12 @@ class MapController with ChangeNotifier {
   // LOCATION AND DISTANCE CONTROLLING METHODS
 
   void _fetchPosition() {
-    _locationRepository.initLocation;
-    _locationRepository.fetchLocation((locationData) async {
-      _points.add(Point(latitude: locationData.latitude!, longitude: locationData.longitude!));
+    _locationRepository.initLocation();
+    _locationRepository.fetchLocation();
+    _locationRepository.points.listen((event) async {
+      _points.add(event);
       _kmControl();
-      _moveCamera(locationData.latitude!, locationData.longitude!);
+      _moveCamera(event.latitude, event.longitude);
       _updateMapObjects();
     });
   }
@@ -138,7 +140,7 @@ class MapController with ChangeNotifier {
     final kmPointsCollection = ClusterizedPlacemarkCollection(
         mapId: _kmPosId,
         placemarks: [],
-        radius: 0,
+        radius: 100,
         minZoom: 20
     );
     _objectsList.add(kmPointsCollection);
@@ -172,10 +174,12 @@ class MapController with ChangeNotifier {
     final collection = _objectsList.firstWhere((el) => el.mapId == _kmPosId) as ClusterizedPlacemarkCollection;
     _objectsList[_objectsList.indexOf(collection)] = collection.copyWith(
       placemarks: _placemarkList,
+      radius: 100,
+      minZoom: 20
     );
   }
 
-  void _updateMapObjects() {
+  void _updateMapObjects() async {
     _updatePositionMark();
     _updatePolyline();
     _updateKmPointsCollection();
@@ -242,6 +246,7 @@ class MapController with ChangeNotifier {
 
     return dist;
   }
+
 }
 
 // TIMER CLASS
